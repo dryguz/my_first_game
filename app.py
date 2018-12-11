@@ -26,6 +26,12 @@ def things(thingx, thingy, thingw, thingh, color):
     pg.draw.rect(gameDisplay,color, [thingx, thingy, thingw, thingh])
 
 
+def things_dodged(count):
+    font = pg.font.SysFont(None, 25)
+    text = font.render("Dodged: "+str(count), True, black)
+    gameDisplay.blit(text, (0, 0))
+
+
 def car(x, y):
     gameDisplay.blit(carImg, (x, y))
 
@@ -60,7 +66,7 @@ def game_loop():
     thing_speed = 7
     thing_width = 100
     thing_height = 100
-
+    dodged = 0
     gameExit = False
 
     while not gameExit:
@@ -86,12 +92,15 @@ def game_loop():
         thing_starty +=  thing_speed
 
         car(x, y)
+        things_dodged(dodged)
 
         if x > display_width-car_width or x < 0:
             crash()
         if thing_starty > display_height:
             thing_starty = 0 - thing_height
             thing_startx = random.randrange(0, display_width)
+            dodged += 1
+            thing_speed += (dodged//10)
 
         if y < thing_starty + thing_height:
             if x > thing_startx and x < thing_startx + thing_width or x + car_width > thing_startx and x + car_width < thing_startx + thing_width:
